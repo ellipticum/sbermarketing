@@ -8,34 +8,36 @@
   let amountTo = 1
 
   async function fetchRates() {
-    const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${currencyFrom}`)
-    const data = await res.json()
-    rates = data.rates
-    convert('from')
+    const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${currencyFrom}`);
+    const data = await res.json();
+    rates = data.rates;
+    convert('from');
   }
 
   const normalizeInput = (value) => {
-    return value ? parseFloat(value).toString() : '0'
-  }
+    // Преобразует значение в строку, затем обратно в число, чтобы удалить ведущие нули
+    return value ? parseFloat(value).toString() : '0'; // Возвращаем '0', если значение является пустым или '0'
+  };
 
   const convert = (direction) => {
     if (direction === 'from') {
       amountFrom = normalizeInput(amountFrom);
-      amountTo = (parseFloat(amountFrom) * (rates[currencyTo] || 0)).toFixed(2)
+      amountTo = (parseFloat(amountFrom) * (rates[currencyTo] || 0)).toFixed(2);
     } else {
       amountTo = normalizeInput(amountTo);
-      amountFrom = (parseFloat(amountTo) / (rates[currencyTo] || 0)).toFixed(2)
+      amountFrom = (parseFloat(amountTo) / (rates[currencyTo] || 0)).toFixed(2);
     }
   }
 
   function switchCurrencies() {
-    [currencyFrom, currencyTo] = [currencyTo, currencyFrom]
-    [amountFrom, amountTo] = [amountTo, amountFrom]
+    [currencyFrom, currencyTo] = [currencyTo, currencyFrom];
+    [amountFrom, amountTo] = [amountTo, amountFrom];
     fetchRates();
   }
 
   onMount(fetchRates)
 </script>
+
 
 <div class='container animated'>
   <div class='groups'>
