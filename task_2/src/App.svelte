@@ -14,17 +14,23 @@
     convert('from')
   }
 
+  const normalizeInput = (value) => {
+    return value ? parseFloat(value).toString() : '0'
+  }
+
   const convert = (direction) => {
     if (direction === 'from') {
-      amountTo = (amountFrom * (rates[currencyTo] || 0)).toFixed(2)
+      amountFrom = normalizeInput(amountFrom);
+      amountTo = (parseFloat(amountFrom) * (rates[currencyTo] || 0)).toFixed(2)
     } else {
-      amountFrom = (amountTo / (rates[currencyTo] || 0)).toFixed(2)
+      amountTo = normalizeInput(amountTo);
+      amountFrom = (parseFloat(amountTo) / (rates[currencyTo] || 0)).toFixed(2)
     }
   }
 
   function switchCurrencies() {
-    [currencyFrom, currencyTo] = [currencyTo, currencyFrom];
-    [amountFrom, amountTo] = [amountTo, amountFrom];
+    [currencyFrom, currencyTo] = [currencyTo, currencyFrom]
+    [amountFrom, amountTo] = [amountTo, amountFrom]
     fetchRates();
   }
 
@@ -44,7 +50,7 @@
         <option value="AUD">AUD</option>
       </select>
 
-      <input type='number' bind:value={amountFrom} on:input={() => convert('from')}>
+      <input type='number' min='0' bind:value={amountFrom} on:input={() => convert('from')}>
     </div>
 
     <div class='group'>
@@ -58,11 +64,11 @@
         <option value="AUD">AUD</option>
       </select>
 
-      <input type='number' bind:value={amountTo} on:input={() => convert('to')}>
+      <input type='number' min='0' bind:value={amountTo} on:input={() => convert('to')}>
     </div>
   </div>
 
-  <button on:click={switchCurrencies} class="switch-button">Switch</button>
+  <button on:click={switchCurrencies} class='switch-button'>Switch</button>
 </div>
 
 <style>
